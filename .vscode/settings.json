@@ -1,0 +1,6 @@
+{
+    "editor.renderWhitespace": "trailing",
+    "htmlhint.options": {
+        "attr-value-double-quotes": false
+    }
+}

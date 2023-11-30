@@ -1,0 +1,26 @@
+{
+    "names": {
+        "_":"b8aafafe72f7cd06ae8c337f93147f65fe2d34c0065b52696123982438cf06fe",
+        "jasper":"b8aafafe72f7cd06ae8c337f93147f65fe2d34c0065b52696123982438cf06fe",
+        "jraedisch":"b8aafafe72f7cd06ae8c337f93147f65fe2d34c0065b52696123982438cf06fe"
+    },
+    "relays": {
+        "b8aafafe72f7cd06ae8c337f93147f65fe2d34c0065b52696123982438cf06fe": [
+            "wss://eden.nostr.land",
+            "wss://n.xmr.se",
+            "wss://nos.lol",
+            "wss://nostr-pub.wellorder.net",
+            "wss://nostr.bitcoiner.social",
+            "wss://nostr.fmt.wiz.biz",
+            "wss://nostr.hubmaker.io",
+            "wss://nostr.naut.social",
+            "wss://nostr.wine",
+            "wss://nostrsatva.net",
+            "wss://offchain.pub",
+            "wss://paid.nostrified.org",
+            "wss://relay.damus.io",
+            "wss://relay.nostr.band",
+            "wss://relay.snort.social"
+        ]
+    }
+}

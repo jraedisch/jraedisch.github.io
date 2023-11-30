@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="This is a two part article. The first part is a short introduction to the Lightning Network. The second part is about an experiment that René Pickhardt and I conducted on top of it."
+    />
+    <script src="/article.js" type="module"></script>
+    <link
+      rel="stylesheet"
+      media="(prefers-color-scheme:light)"
+      href="/vendor/shoelace/themes/light.css"
+    />
+    <link
+      rel="stylesheet"
+      media="(prefers-color-scheme:dark)"
+      href="/vendor/shoelace/themes/dark.css"
+      onload="document.documentElement.classList.add('sl-theme-dark');"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+
+    <title>Playing with the Lightning Network</title>
+    <link rel="canonical" href="https://raedisch.net/articles/satoshi_tennis" />
+  </head>
+  <body>
+    <section>
+      <jr-article>
+# Playing with the Lightning Network
+
+(This is a two part article. The first part is a deceptively simple short introduction to the Lightning Network to lure you in. The second part is a more technical overview of an experiment that [René Pickhardt](https://www.rene-pickhardt.de/) and I conducted on top of it. You can find badly [cobbled together sourcecode](https://gitlab.com/jraedisch/tennis) here.)  
+
+## Part 1: Introduction
+
+Now that I have had some delicious chili con carne I will try writing about Lightning again. Lightning as in the Bitcoin based layer 2 solution that allows more payments at higher frequencies and lower prices, than settling everything on the blockchain. It achieves this without sacrificing too much of the underlying layer's security.  
+  
+The basic idea of it is that we may exchange signed transactions that reflect balances between us, but we do not commit them to the blockchain. Instead, every time we want the balance between us to change, we sign new transactions for each other and throw the old ones away. Of course to ensure our inability to cheat each other, the actual setup is a little more complicated. You can read up on that elsewhere.  
+  
+Why is it called Lightning Network though? The network results from me programmatically exchanging signed transactions with you, and you are doing the same with another person. Now if I want to pay that person, we can rebalance between us, and then you two rebalance too, so that money flows from me to that other person, enabling sub-second transactions for a couple of millisatoshis (a thousandth of a one hundred millionth of a bitcoin), provided we do not settle on the blockchain.
+
+## Part 2: Satoshi Tennis
+
+But don't trust, verify, e.g. by programming two computers to play SATOSHI TENNIS™! Or you can just read up on how I do that with a friend, and what our findings are (so far). Let's call that friend René (I am Jasper by the way), and let's say the whole thing was his idea (which it actually was, and he is actually a friend called René).  
+  
+The idea behind Satoshi Tennis is sending 1 satoshi back and forth between two Lightning nodes.  
+  
+![Tennis German Open 2012, Hamburg Rotherbaum](/images/tennis_am_rothenbaum.jpg) By [jhnnsstnbrg](https://www.flickr.com/people/77275344@N07) from Kiel - [German Open 2012](https://www.flickr.com/photos/jhnnsstnbrg/7583121690/), [CC BY 2.0](https://creativecommons.org/licenses/by/2.0), [Link](https://commons.wikimedia.org/w/index.php?curid=28958349)
+
+### Naive Approach (using [Lightninglabs' LND](https://github.com/lightningnetwork/lnd) via command line)
+
+The first hurdle we need to overcome is enabling the other player to create invoices on our node. (In a Lightning Network you can only send money to someone if that someone sends you a payment request first. The API for creating these is private per default, so that usually only a Node's owner can create invoices.)  
+  
+That means programming a minimal HTTP API that will translate POST requests into a command line call of `lncli addinvoice`. We can then open a channel to the other player's node and let a second program periodically poll for changes to that channel's balance. Once a rising of the local balance is detected, a call will be made to the other player's API requesting a payment request that will be paid directly, leading to a rise of the other player's balance, and so on. The first satoshi we have to send manually. After that our nodes will play automatically. Just looking at the logs benchmarks this setup at about two round trips (sending a satoshi and getting it back) a second.  
+  
+This approach has some weaknesses, both security and performance wise. It is probably not a good idea running the public facing API as the same Linux user or even on the same machine that is running LND. We only do that to have direct access via the command line. When you read into the LND docs you will see that commands will be converted to API calls anyway, so we can use the underlying API directly instead.  
+  
+A potential performance problem could be the polling of the channel balance. Again, the docs say, that the LND API enables listening for updates to invoices, so we can use that.  
+  
+Also, our channel being part of a larger Network, it could happen that another transaction is being routed through it at any time. We do not want that to trigger sending a satoshi to the other player. And of course we should check that the other player is really sending one satoshi, and that she is requesting only one satoshi back.
+
+### Improved Approach (using Lightninglabs' API)
+
+Let's implement solutions for the problems mentioned above. Since I am using Go I can use the LND project's libraries. I had to do some digging in the code base on how to setup the API connection (hint: you need access to the LND node's TLS certificate and admin macaroon), and additionally I had some trouble with dependency management.  
+  
+We no longer poll the channel balance but instead [subscribe to a feed of invoice updates](https://api.lightning.community/#subscribeinvoices). To make sure that non-player payments do not trigger responses, we abuse the invoice's fallback address: Other players must now provide a locally known public key when requesting payment requests via our public API. That key is saved as the fallback address of the newly created invoice, and now we can filter the invoice update for paid invoices with the right public keys.  
+  
+The public keys are also used to resolve the other player's preconfigured API URL, so theoretically we could now play multiple games with different players at the same time. Finally we replace all the other command line commands with API calls and move the whole app to another user.  
+  
+Our Satoshi Tennis is now a lot more robust, but sadly not a lot faster. (A round trip still takes around 500 milliseconds. We tried to get this lower with some alternative implementations, but so far this seems to be the limit dictated by the lower levels of Lightning.) The refactored version might be a more scalable though, since subscribing to invoice changes rather than polling channel balances should be a easier on the Lightning node.  
+  
+What questions/criticisms/proposals do you have?  
+  
+By the way, it might have been chili sin carne that I was eating earlier. Who cares?  
+  
+Created at 2018-08-20. Updated at 2018-08-30. [raedisch.net](/)
+      </jr-article>
+    </section>
+  </body>
+</html>
