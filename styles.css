@@ -33,6 +33,12 @@ jr-prompt li {
     margin: 16px 0;
 }
 
+jr-prompt li label {
+    align-items: center;
+    display: flex;
+    gap: 4px;
+}
+
 nav,
 section {
     margin: 2em auto;
