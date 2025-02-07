@@ -21,7 +21,7 @@ export class Article extends LitElement {
 
   constructor () {
     super()
-    this._markup = this.htmlToElement(snarkdown(this.innerText))
+    this._markup = this.htmlToElement(snarkdown(this.innerText.replaceAll('    ', '')))
   }
 
   render () {
