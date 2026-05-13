@@ -1,0 +1,31 @@
+# Jasper Rädisch
+
+> Software developer from Hamburg, Germany. Builds ATproto social tools — divepool (Bluesky discovery), PingArthur (LLM-first uptime monitoring), IsBlueskyDying (feed liveness/churn for Bluesky). Older background in Bitcoin/Lightning tooling and personal projects.
+
+## Projects
+
+- [divepool](https://divepool.social/): Discover Bluesky accounts and posts by topic. Semantic search over AT Protocol posts using embeddings, c-TF-IDF, and medoid-based clustering. Public API: https://divepool.social/api/v1/openapi.json
+- [PingArthur](https://pingarthur.com/): LLM-first uptime monitoring. Prove URL ownership with a header echo, then poll status. The OpenAPI spec is the docs: https://pingarthur.com/api/v1/openapi
+- [IsBlueskyDying](https://isblueskydying.com/): Feed liveness/churn score for Bluesky. Global or per-user.
+- [sudokoin](https://sudokoin.com/): Solve sudokus. Claim sudokoin.
+- [Brickshuffle](https://brickshuffle.com/): Pick random LEGO parts from sets you own.
+
+## Articles
+
+- [Keywords vs Embeddings (ATmosphereConf 2026)](https://divepool.social/presentation/PRESENTATION.html): Slides on ATproto-based social media discovery using embeddings, c-TF-IDF, and clustering.
+- [Playing with the Lightning Network](https://raedisch.net/articles/satoshi_tennis): Building Satoshi Tennis to get a feeling for LND.
+- [Thoughts about Bitcoin](https://raedisch.net/articles/bitcoin)
+- [Come for the Price, Stay for the Education](https://raedisch.net/articles/bitcoin_community): The educated Bitcoin community (at least in Germany) is still small.
+
+## Profiles
+
+- [Bluesky](https://bsky.app/profile/raedisch.net)
+- [Mastodon](https://mastodon.social/@jraedisch)
+- [Hacker News](https://news.ycombinator.com/user?id=jraedisch)
+- [GitHub](https://github.com/jraedisch)
+- [SoundCloud](https://soundcloud.com/jraedisch)
+- [LinkedIn](https://de.linkedin.com/in/jasperraedisch)
+
+## Contact
+
+- Email: jasper at raedisch.net
